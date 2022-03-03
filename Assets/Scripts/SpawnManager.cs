@@ -7,6 +7,7 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private float spawnRange;
 
     private int enemyCount;
+    private int waveNumber;
 
     private static SpawnManager instance;
 
@@ -20,7 +21,9 @@ public class SpawnManager : MonoBehaviour
         instance = this;
 
         enemyCount = 0;
-        SpawnEnemies(1);
+        waveNumber = 1;
+
+        SpawnEnemies(waveNumber);
     }
 
     private void SpawnEnemies(int amount)
@@ -45,7 +48,10 @@ public class SpawnManager : MonoBehaviour
         enemyCount--;
 
         if(enemyCount <= 0)
-            SpawnEnemies(1);
+        {
+            waveNumber++;
+            SpawnEnemies(waveNumber);
+        }
     }
 
     public static SpawnManager GetInstance()
