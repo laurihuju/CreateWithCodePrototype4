@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
@@ -8,14 +6,30 @@ public class SpawnManager : MonoBehaviour
 
     [SerializeField] private float spawnRange;
 
+    private int enemyCount;
+
+    private static SpawnManager instance;
+
     void Start()
     {
-        SpawnEnemy();
+        if(instance != null)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        instance = this;
+
+        enemyCount = 0;
+        SpawnEnemies(1);
     }
 
-    private void SpawnEnemy()
+    private void SpawnEnemies(int amount)
     {
-        Instantiate(enemyPrefab, GetSpawnPosition(), enemyPrefab.transform.rotation);
+        for(int i = 0; i < amount; i++)
+        {
+            Instantiate(enemyPrefab, GetSpawnPosition(), enemyPrefab.transform.rotation);
+            enemyCount++;
+        }
     }
 
     private Vector3 GetSpawnPosition()
@@ -24,5 +38,18 @@ public class SpawnManager : MonoBehaviour
         float posZ = Random.Range(-spawnRange, spawnRange);
 
         return new Vector3(posX, 0, posZ);
+    }
+
+    public void EnemyDeath()
+    {
+        enemyCount--;
+
+        if(enemyCount <= 0)
+            SpawnEnemies(1);
+    }
+
+    public static SpawnManager GetInstance()
+    {
+        return instance;
     }
 }
