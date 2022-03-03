@@ -5,6 +5,7 @@ public class PlayerController : MonoBehaviour
 {
     private Rigidbody rb;
     [SerializeField] private GameObject focalPoint;
+    [SerializeField] private GameObject powerupIndicator;
 
     [SerializeField] private float speed;
     [SerializeField] private float powerupStrength;
@@ -13,7 +14,7 @@ public class PlayerController : MonoBehaviour
 
     private static PlayerController instance;
 
-    void Start()
+    private void Start()
     {
         if(instance != null)
         {
@@ -25,7 +26,12 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
-    void FixedUpdate()
+    private void Update()
+    {
+        powerupIndicator.transform.position = new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z);
+    }
+
+    private void FixedUpdate()
     {
         float verticalInput = Input.GetAxis("Vertical");
         rb.AddForce(focalPoint.transform.forward * speed * verticalInput);
@@ -35,7 +41,6 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Powerup") && !hasPowerup)
         {
-            hasPowerup = true;
             Destroy(other.gameObject);
             StartCoroutine(PowerupCountdownRoutine());
         }
@@ -52,8 +57,13 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator PowerupCountdownRoutine()
     {
+        hasPowerup = true;
+        powerupIndicator.SetActive(true);
+
         yield return new WaitForSeconds(7);
+
         hasPowerup = false;
+        powerupIndicator.SetActive(false);
     }
 
     public static PlayerController GetInstance()
