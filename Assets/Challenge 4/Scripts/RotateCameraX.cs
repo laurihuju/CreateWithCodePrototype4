@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class RotateCameraX : MonoBehaviour
 {
@@ -14,6 +12,5 @@ public class RotateCameraX : MonoBehaviour
         transform.Rotate(Vector3.up, horizontalInput * speed * Time.deltaTime);
 
         transform.position = player.transform.position; // Move focal point with player
-
     }
 }
